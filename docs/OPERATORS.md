@@ -1,424 +1,239 @@
 # TIG Operators
 
-**Complete Reference — Version 3.0**
+**Status: Exploratory. Emerged from simulations, not derived from theory.**
+
+See [EXPLORATORY.md](EXPLORATORY.md) for context on how these artifacts should be treated.
 
 ---
 
 ## Overview
 
-TIG defines 10 base operators (0-9) plus the Ω̂ (omega-hat) unification operator. These operators represent fundamental actions that systems can take to maintain or restore coherence.
+During simulation, we needed a vocabulary for discrete actions nodes could take. These 10 operators (0-9) plus the meta-operator (Ω̂) emerged as useful primitives.
 
-Operators are:
-- **Composable**: Can be combined in sequences
-- - **Reversible**: Most have inverse operations
-  - - **Scale-invariant**: Apply at any system level
-   
-    - ---
+They are **not** proven to be:
+- Minimal (maybe fewer would suffice)
+- Complete (maybe more are needed)
+- Universal (maybe different systems need different primitives)
 
-    ## Base Operators (0-9)
+They're what worked in our toy sim. Included for completeness.
 
-    ### Operator 0: Void
+---
 
-    **Symbol**: `∅` or `0`
-    **Name**: Void
-    **Function**: Null state, initialization, emptiness
+## Base Operators (0-9)
 
-    **Semantics:**
-    - Return to zero state
-    - - Clear all buffers
-      - - Initialize from nothing
-        - - Represents potential before actualization
-         
-          - **Compute expression:**
-          - ```
-            void() → null
-            void(x) → x = 0
-            ```
+### 0 — Void
 
-            **Use cases:**
-            - System cold start
-            - - Memory wipe
-              - - State reset to known-good
-               
-                - **Inverse**: None (void is the ground state)
-               
-                - ---
+**Symbol**: ∅  
+**Action**: Null state, initialization, emptiness
 
-                ### Operator 1: Lattice
+The ground state. Return to zero. Clear the slate.
 
-                **Symbol**: `⊞` or `1`
-                **Name**: Lattice
-                **Function**: Structure formation, grid creation, spatial ordering
+In compute: cold start, memory wipe, factory reset.
 
-                **Semantics:**
-                - Create organized structure from chaos
-                - - Establish regular patterns
-                  - - Define boundaries and positions
-                    - - Scaffold for future operations
-                     
-                      - **Compute expression:**
-                      - ```
-                        lattice(nodes) → structured_graph(nodes)
-                        lattice(data) → indexed_structure(data)
-                        ```
+---
 
-                        **Use cases:**
-                        - Cluster topology setup
-                        - - Index construction
-                          - - Network mesh formation
-                            - - Schema definition
-                             
-                              - **Inverse**: Operator 6 (Chaos)
-                             
-                              - ---
+### 1 — Lattice
 
-                              ### Operator 2: Counter
+**Symbol**: ⊞  
+**Action**: Structure formation, create order
 
-                              **Symbol**: `#` or `2`
-                              **Name**: Counter
-                              **Function**: Increment, measurement, enumeration
+Build a scaffold. Establish positions. Form the geometry.
 
-                              **Semantics:**
-                              - Add one to count
-                              - - Measure quantity
-                                - - Track occurrences
-                                  - - Discrete progression
-                                   
-                                    - **Compute expression:**
-                                    - ```
-                                      count(x) → x + 1
-                                      count(set) → |set|
-                                      ```
+In compute: cluster topology setup, index construction, schema creation.
 
-                                      **Use cases:**
-                                      - Metrics collection
-                                      - - Reference counting
-                                        - - Heartbeat tracking
-                                          - - Sequence numbering
-                                           
-                                            - **Inverse**: Decrement (implicit)
-                                           
-                                            - ---
+**Inverse**: Chaos (6)
 
-                                            ### Operator 3: Progress
+---
 
-                                            **Symbol**: `→` or `3`
-                                            **Name**: Progress
-                                            **Function**: Forward movement, advancement, evolution
+### 2 — Counter
 
-                                            **Semantics:**
-                                            - Move from state A to state B
-                                            - - Time's arrow
-                                              - - Irreversible advancement
-                                                - - Growth and development
-                                                 
-                                                  - **Compute expression:**
-                                                  - ```
-                                                    progress(state, delta) → next_state
-                                                    progress(task) → task.advance()
-                                                    ```
+**Symbol**: #  
+**Action**: Measure, increment, enumerate
 
-                                                    **Use cases:**
-                                                    - Job execution
-                                                    - - State machine transitions
-                                                      - - Version upgrades
-                                                        - - Data pipeline stages
-                                                         
-                                                          - **Inverse**: Rollback (not exact inverse — progress may be irreversible)
-                                                         
-                                                          - ---
+Count what exists. Track occurrences. Discrete observation.
 
-                                                          ### Operator 4: Collapse
+In compute: metrics collection, reference counting, sequence numbers.
 
-                                                          **Symbol**: `↓` or `4`
-                                                          **Name**: Collapse
-                                                          **Function**: State reduction, decision, measurement
+---
 
-                                                          **Semantics:**
-                                                          - Many possibilities → one actuality
-                                                          - - Superposition → definite state
-                                                            - - Aggregation to single value
-                                                              - - Decision point
-                                                               
-                                                                - **Compute expression:**
-                                                                - ```
-                                                                  collapse(possibilities) → selected_one
-                                                                  collapse(distribution) → sample
-                                                                  collapse(options, criteria) → best_option
-                                                                  ```
+### 3 — Progress
 
-                                                                  **Use cases:**
-                                                                  - Load balancer selection
-                                                                  - - Consensus finalization
-                                                                    - - Query result aggregation
-                                                                      - - Feature flag resolution
-                                                                       
-                                                                        - **Inverse**: Operator 6 (Chaos) — but information is lost in collapse
-                                                                       
-                                                                        - ---
+**Symbol**: →  
+**Action**: Move forward, advance, evolve
 
-                                                                        ### Operator 5: Balance
+Time's arrow. State A to state B. Growth.
 
-                                                                        **Symbol**: `⚖` or `5`
-                                                                        **Name**: Balance
-                                                                        **Function**: Equilibrium seeking, fairness, homeostasis
+In compute: job execution, pipeline stages, version upgrades.
 
-                                                                        **Semantics:**
-                                                                        - Restore equal distribution
-                                                                        - - Find stable midpoint
-                                                                          - - Counteract imbalance
-                                                                            - - Maintain steady state
-                                                                             
-                                                                              - **Compute expression:**
-                                                                              - ```
-                                                                                balance(loads) → redistribute(loads, equal)
-                                                                                balance(accounts) → reconcile(accounts)
-                                                                                ```
+**Note**: Progress may be irreversible.
 
-                                                                                **Use cases:**
-                                                                                - Load balancing
-                                                                                - - Resource allocation
-                                                                                  - - Queue leveling
-                                                                                    - - Rate limiting
-                                                                                     
-                                                                                      - **Inverse**: Imbalance (not a defined operator — balance seeks to undo imbalance)
-                                                                                     
-                                                                                      - ---
+---
 
-                                                                                      ### Operator 6: Chaos
+### 4 — Collapse
 
-                                                                                      **Symbol**: `☆` or `6`
-                                                                                      **Name**: Chaos
-                                                                                      **Function**: Entropy injection, randomization, disorder
+**Symbol**: ↓  
+**Action**: Reduce options to one, decide, commit
 
-                                                                                      **Semantics:**
-                                                                                      - Break existing structure
-                                                                                      - - Introduce randomness
-                                                                                        - - Test resilience
-                                                                                          - - Prevent stagnation
-                                                                                           
-                                                                                            - **Compute expression:**
-                                                                                            - ```
-                                                                                              chaos(structure) → randomize(structure)
-                                                                                              chaos(system) → inject_fault(system)
-                                                                                              ```
+Many possibilities become one actuality. The measurement problem.
 
-                                                                                              **Use cases:**
-                                                                                              - Chaos engineering (kill random pods)
-                                                                                              - - Fuzzing
-                                                                                                - - Shuffle operations
-                                                                                                  - - Entropy generation
-                                                                                                   
-                                                                                                    - **Inverse**: Operator 1 (Lattice)
-                                                                                                   
-                                                                                                    - ---
-                                                                                                    
-                                                                                                    ### Operator 7: Harmony
-                                                                                                    
-                                                                                                    **Symbol**: `♪` or `7`
-                                                                                                    **Name**: Harmony
-                                                                                                    **Function**: Resonance alignment, synchronization, consonance
-                                                                                                    
-                                                                                                    **Semantics:**
-                                                                                                    - Bring disparate elements into alignment
-                                                                                                    - - Synchronize frequencies
-                                                                                                      - - Achieve mutual reinforcement
-                                                                                                        - - Coherent oscillation
-                                                                                                         
-                                                                                                          - **Compute expression:**
-                                                                                                          - ```
-                                                                                                            harmony(clocks) → synchronize(clocks)
-                                                                                                            harmony(replicas) → consensus(replicas)
-                                                                                                            ```
-                                                                                                            
-                                                                                                            **Use cases:**
-                                                                                                            - Clock synchronization (NTP, PTP)
-                                                                                                            - - Replica convergence
-                                                                                                              - - Cache coherence
-                                                                                                                - - Distributed consensus
-                                                                                                                 
-                                                                                                                  - **Inverse**: Desynchronization (partial inverse via chaos)
-                                                                                                                 
-                                                                                                                  - ---
-                                                                                                                  
-                                                                                                                  ### Operator 8: Breath
-                                                                                                                  
-                                                                                                                  **Symbol**: `∿` or `8`
-                                                                                                                  **Name**: Breath
-                                                                                                                  **Function**: Oscillation, cycles, rhythmic alternation
-                                                                                                                  
-                                                                                                                  **Semantics:**
-                                                                                                                  - Inhale/exhale pattern
-                                                                                                                  - - Periodic expansion and contraction
-                                                                                                                    - - Heartbeat rhythm
-                                                                                                                      - - Wave-like behavior
-                                                                                                                       
-                                                                                                                        - **Compute expression:**
-                                                                                                                        - ```
-                                                                                                                          breath(system) → oscillate(system, period)
-                                                                                                                          breath(buffer) → fill_then_flush(buffer)
-                                                                                                                          ```
-                                                                                                                          
-                                                                                                                          **Use cases:**
-                                                                                                                          - Garbage collection cycles
-                                                                                                                          - - Batch processing windows
-                                                                                                                            - - Health check intervals
-                                                                                                                              - - Autoscaling oscillation
-                                                                                                                               
-                                                                                                                                - **Inverse**: Flatline (not desirable — systems should breathe)
-                                                                                                                               
-                                                                                                                                - ---
-                                                                                                                                
-                                                                                                                                ### Operator 9: Reset
-                                                                                                                                
-                                                                                                                                **Symbol**: `↺` or `9`
-                                                                                                                                **Name**: Reset
-                                                                                                                                **Function**: Return to origin, restart, reboot
-                                                                                                                                
-                                                                                                                                **Semantics:**
-                                                                                                                                - Go back to known-good state
-                                                                                                                                - - Clear accumulated drift
-                                                                                                                                  - - Fresh start
-                                                                                                                                    - - Different from void — reset returns to *defined* initial state, not emptiness
-                                                                                                                                     
-                                                                                                                                      - **Compute expression:**
-                                                                                                                                      - ```
-                                                                                                                                        reset(system) → system.initial_state
-                                                                                                                                        reset(counter) → counter = initial_value
-                                                                                                                                        ```
-                                                                                                                                        
-                                                                                                                                        **Use cases:**
-                                                                                                                                        - System reboot
-                                                                                                                                        - - Transaction rollback
-                                                                                                                                          - - Session termination
-                                                                                                                                            - - Circuit breaker reset
-                                                                                                                                             
-                                                                                                                                              - **Inverse**: None (reset establishes new baseline)
-                                                                                                                                             
-                                                                                                                                              - ---
-                                                                                                                                              
-                                                                                                                                              ## The Ω̂ Operator (Omega-Hat)
-                                                                                                                                              
-                                                                                                                                              **Symbol**: `Ω̂`
-                                                                                                                                              **Name**: Unification / Coherence Keeper
-                                                                                                                                              **Function**: Meta-operation, orchestration, coherence maintenance
-                                                                                                                                              
-                                                                                                                                              ### Semantics
-                                                                                                                                              
-                                                                                                                                              Ω̂ is not a single operation but a meta-operator that:
-                                                                                                                                              1. **Observes**: Monitors S* across all nodes/scales
-                                                                                                                                              2. 2. **Decides**: Determines which operators to invoke
-                                                                                                                                                 3. 3. **Orchestrates**: Coordinates multi-node responses
-                                                                                                                                                    4. 4. **Maintains**: Keeps S* above threshold T*
-                                                                                                                                                      
-                                                                                                                                                       5. ### Ω̂ as Operator Selector
-                                                                                                                                                      
-                                                                                                                                                       6. ```
-                                                                                                                                                          Ω̂(system_state) → operator_sequence
+In compute: load balancer selection, consensus finalization, query aggregation.
 
-                                                                                                                                                          Example:
-                                                                                                                                                            If S* dropping due to imbalance:
-                                                                                                                                                              Ω̂ → [5 (balance), 7 (harmony)]
+**Note**: Information is lost in collapse.
 
-                                                                                                                                                            If S* dropping due to accumulated errors:
-                                                                                                                                                              Ω̂ → [9 (reset)] or [4 (collapse), 1 (lattice)]
+---
 
-                                                                                                                                                            If S* stable but stagnant:
-                                                                                                                                                              Ω̂ → [6 (chaos), 3 (progress)]
-                                                                                                                                                          ```
-                                                                                                                                                          
-                                                                                                                                                          ### The Coherence Keeper Archetype
-                                                                                                                                                          
-                                                                                                                                                          Ω̂ is associated with Archetype 12 (Coherence Keeper):
-                                                                                                                                                          - Only archetype that operates on other archetypes
-                                                                                                                                                          - - Maintains meta-stability
-                                                                                                                                                            - - Intervenes when normal archetype transitions fail
-                                                                                                                                                             
-                                                                                                                                                              - ### Ω̂ Properties
-                                                                                                                                                             
-                                                                                                                                                              - - **Non-local**: Acts on entire system, not single nodes
-                                                                                                                                                                - - **Reflective**: Can observe its own operations
-                                                                                                                                                                  - - **Conservative**: Prefers minimal intervention
-                                                                                                                                                                    - - **Predictive**: Anticipates coherence degradation (in advanced implementations)
-                                                                                                                                                                     
-                                                                                                                                                                      - ---
-                                                                                                                                                                      
-                                                                                                                                                                      ## Operator Composition
-                                                                                                                                                                      
-                                                                                                                                                                      Operators can be composed in sequences:
-                                                                                                                                                                      
-                                                                                                                                                                      ### Notation
-                                                                                                                                                                      
-                                                                                                                                                                      ```
-                                                                                                                                                                      Op1 · Op2 · Op3  (sequential application)
-                                                                                                                                                                      Op1 ⊗ Op2       (parallel application)
-                                                                                                                                                                      Op1 | Op2       (conditional: Op1 if condition, else Op2)
-                                                                                                                                                                      ```
-                                                                                                                                                                      
-                                                                                                                                                                      ### Common Patterns
-                                                                                                                                                                      
-                                                                                                                                                                      **Reset-Lattice-Progress** (recovery sequence):
-                                                                                                                                                                      ```
-                                                                                                                                                                      9 · 1 · 3
-                                                                                                                                                                      Reset to known state, establish structure, advance
-                                                                                                                                                                      ```
-                                                                                                                                                                      
-                                                                                                                                                                      **Chaos-Balance-Harmony** (resilience test):
-                                                                                                                                                                      ```
-                                                                                                                                                                      6 · 5 · 7
-                                                                                                                                                                      Inject disorder, rebalance, verify alignment
-                                                                                                                                                                      ```
-                                                                                                                                                                      
-                                                                                                                                                                      **Collapse-Counter-Progress** (decision loop):
-                                                                                                                                                                      ```
-                                                                                                                                                                      (4 · 2 · 3)*
-                                                                                                                                                                      Repeatedly: decide, measure, advance
-                                                                                                                                                                      ```
-                                                                                                                                                                      
-                                                                                                                                                                      ---
-                                                                                                                                                                      
-                                                                                                                                                                      ## Operator Algebra
-                                                                                                                                                                      
-                                                                                                                                                                      ### Identity
-                                                                                                                                                                      
-                                                                                                                                                                      ```
-                                                                                                                                                                      0 · X = X · 0 = X  (void is identity for most operations)
-                                                                                                                                                                      ```
-                                                                                                                                                                      
-                                                                                                                                                                      ### Inverses
-                                                                                                                                                                      
-                                                                                                                                                                      ```
-                                                                                                                                                                      1 · 6 ≈ identity  (lattice then chaos returns to ~void)
-                                                                                                                                                                      6 · 1 ≈ identity  (chaos then lattice creates new structure)
-                                                                                                                                                                      ```
-                                                                                                                                                                      
-                                                                                                                                                                      Note: Not exact inverses due to information loss.
-                                                                                                                                                                      
-                                                                                                                                                                      ### Idempotence
-                                                                                                                                                                      
-                                                                                                                                                                      ```
-                                                                                                                                                                      5 · 5 = 5  (balance is idempotent)
-                                                                                                                                                                      9 · 9 = 9  (reset is idempotent)
-                                                                                                                                                                      ```
-                                                                                                                                                                      
-                                                                                                                                                                      ### Non-Commutativity
-                                                                                                                                                                      
-                                                                                                                                                                      Most operators do not commute:
-                                                                                                                                                                      ```
-                                                                                                                                                                      3 · 4 ≠ 4 · 3  (progress then collapse ≠ collapse then progress)
-                                                                                                                                                                      ```
-                                                                                                                                                                      
-                                                                                                                                                                      ---
-                                                                                                                                                                      
-                                                                                                                                                                      ## Open Questions
-                                                                                                                                                                      
-                                                                                                                                                                      1. Is this operator set **complete**? Can all coherence-maintaining operations be expressed?
-                                                                                                                                                                      2. 2. What is the **minimal** operator set? Are some operators derivable from others?
-                                                                                                                                                                         3. 3. Is there a **group structure**? What are the symmetries?
-                                                                                                                                                                            4. 4. How do operators relate to **category theory** morphisms?
-                                                                                                                                                                              
-                                                                                                                                                                               5. ---
-                                                                                                                                                                              
-                                                                                                                                                                               6. **Author**: Brayden Sanders, 7Site LLC
-                                                                                                                                                                               7. **Status**: Frozen for validation
-                                                                                                                                                                               8. **Version**: 3.0
+### 5 — Balance
+
+**Symbol**: ⚖  
+**Action**: Seek equilibrium, redistribute, equalize
+
+Find the stable middle. Counteract imbalance. Homeostasis.
+
+In compute: load balancing, resource allocation, rate limiting.
+
+**Property**: Idempotent (Balance → Balance = Balance)
+
+---
+
+### 6 — Chaos
+
+**Symbol**: ☆  
+**Action**: Inject entropy, randomize, disrupt
+
+Break existing structure. Introduce uncertainty. Prevent stagnation.
+
+In compute: chaos engineering, fuzzing, shuffle operations.
+
+**Inverse**: Lattice (1)
+
+---
+
+### 7 — Harmony
+
+**Symbol**: ♪  
+**Action**: Align, synchronize, resonate
+
+Bring disparate elements into phase. Coherent oscillation.
+
+In compute: clock sync, replica convergence, cache coherence.
+
+---
+
+### 8 — Breath
+
+**Symbol**: ∿  
+**Action**: Oscillate, cycle, pulse
+
+Inhale/exhale. Periodic expansion and contraction. Rhythm.
+
+In compute: GC cycles, batch windows, health check intervals, autoscaling.
+
+---
+
+### 9 — Reset
+
+**Symbol**: ↺  
+**Action**: Return to known state, restart
+
+Different from Void: Reset returns to *defined* initial state, not emptiness.
+
+In compute: reboot, rollback, circuit breaker reset.
+
+**Property**: Idempotent (Reset → Reset = Reset)
+
+---
+
+## The Ω̂ Operator (Omega-Hat)
+
+**Symbol**: Ω̂  
+**Name**: Unification / Coherence Keeper  
+**Action**: Meta-operation, orchestration
+
+Ω̂ is not one action — it's the operator that chooses which operators to apply.
+
+### Function
+
+1. **Observe**: Monitor S* across the system
+2. **Decide**: Which operator(s) would restore coherence?
+3. **Apply**: Execute the chosen sequence
+4. **Verify**: Did S* improve?
+
+### In Trinity Terms
+
+Ω̂ is the macro's awareness of its micros. It's the cluster knowing its nodes. The self holding its trinity together.
+
+### Example Logic
+```
+if S* dropping from imbalance:
+    apply Balance (5)
+    
+if S* dropping from accumulated errors:
+    apply Reset (9)
+    
+if S* stable but stagnant:
+    apply Chaos (6) then Progress (3)
+```
+
+---
+
+## Operator Composition
+
+Operators can be sequenced:
+
+**Reset-Lattice-Progress** (recovery):
+```
+9 → 1 → 3
+Return to known state, rebuild structure, move forward
+```
+
+**Chaos-Balance-Harmony** (resilience test):
+```
+6 → 5 → 7
+Inject disorder, rebalance, verify alignment
+```
+
+---
+
+## Operator Properties
+
+### Inverses (approximate)
+
+- Lattice (1) ↔ Chaos (6)
+- Progress (3) ↔ Reset (9) — partial, information may be lost
+
+### Idempotent
+
+- Balance (5): Balancing a balanced system changes nothing
+- Reset (9): Resetting from initial state changes nothing
+
+### Non-commutative
+
+Most operators don't commute:
+```
+Progress → Collapse ≠ Collapse → Progress
+```
+
+Order matters.
+
+---
+
+## Open Questions
+
+1. **Completeness**: Can all coherence-maintaining actions be expressed with these?
+2. **Minimality**: Are any operators derivable from others?
+3. **Universality**: Do different domains need different operator sets?
+4. **Algebra**: Is there a group structure? What are the symmetries?
+
+---
+
+## Honest Assessment
+
+These operators are a naming convention that was useful in our simulations. They might map to something fundamental — least action paths, geometric transformations, categorical morphisms.
+
+Or they might just be convenient labels.
+
+We don't know yet.
+
+---
+
+*"Every action is one of these, or a composition of them. Maybe."*

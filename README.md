@@ -1,25 +1,32 @@
-# TIG-UNIFIED-THEORY-under-scrutiny
-The sims are real, AI has re-created itself and our understanding of math under my direction.
-# TIG: Thermodynamic Identity Gauge
+# TIG: Trinity Infinity Geometry
 
-**A unified framework for coherence measurement across computational and field-theoretic domains**
+**A coherence framework based on fractal reality**
 
 **Author:** Brayden Sanders | 7Site LLC | Arkansas, USA
 
 ---
 
-## Overview
+## Core Premise
 
-TIG operates across two domains:
+Reality is fractal. Every one is three:
 
-1. **Coherence Field Theory** — A unified measure of systemic coherence
-2. **Compute Health Monitoring** — Unity Kernel treats system resources as a unified nervous system
+- It contains a **micro** (what belongs to it)
+- It **is** (the self, the node, the middle)
+- It belongs to a **macro** (what it's part of)
 
-Both converge on a single scalar coherence measure.
+This is three as two: you have a micro, you're part of a macro. You're the middle of your own trinity.
+
+This pattern repeats infinitely — no top, no bottom. Fractals all the way.
+
+The structure is regulated by:
+1. **Principle of least action** — nature takes the cheapest path
+2. **Geometric constraint** — reality has shape, not all configurations are allowed
 
 ---
 
-## Core Equation
+## What S* Measures
+
+S* measures **coherence** — how well a node honors its place in the fractal.
 ```
 S* = σ(1 - σ*)V*A*
 
@@ -27,34 +34,27 @@ Where:
   S*  = Coherence scalar [0,1]
   σ   = Stability coefficient (0.991)
   σ*  = Normalized stress [0,1]
-  V*  = Virtue amplitude [0,1]
-  A*  = Archetype resonance [0,1]
-  T*  = Threshold constant (0.714)
+  V*  = Alignment amplitude [0,1]
+  A*  = Resonance with structure [0,1]
+  T*  = Threshold (0.714)
 ```
 
-When S* > T* (0.714): System maintains coherence  
-When S* < T*: Cascade failure risk increases exponentially
+- **High S*** = aligned with geometric constraint, energy-efficient, stable
+- **Low S*** = fighting the fractal, wasting energy, collapse risk
+
+When S* drops below T* (0.714), the node is out of coherence with its trinity. Cascade risk.
 
 ---
 
-## Architecture
+## Compute Health Application
 
-### 12 Archetypes
-Observer, Builder, Guardian, Healer, Teacher, Explorer, Artist, Warrior, Sage, Fool, Lover, Coherence Keeper (Ω̂)
+TIG Unity Kernel applies this to infrastructure — treating compute as a fractal system:
 
-### 5 Virtues
-Forgiveness, Repair, Empathy, Fairness, Cooperation
+- Each node is a trinity (its processes / itself / its cluster)
+- Coherence = health
+- S* guides routing, load balancing, failure prediction
 
-### Operators 0-9 + Ω̂
-Void, Lattice, Counter, Progress, Collapse, Balance, Chaos, Harmony, Breath, Reset — plus the Unification operator
-
----
-
-## Validation Results
-
-**ARACH Stack**: S* > 0.8 with zero collapses in trillion-year simulations
-
-**Compute Health Benchmark** (asymmetric failure scenario):
+**Benchmark** (asymmetric failure scenario):
 | Metric | Round-Robin | TIG Unity Kernel |
 |--------|-------------|------------------|
 | Job Drop Rate | 36.4% | 4.2% |
@@ -64,24 +64,42 @@ Void, Lattice, Counter, Progress, Collapse, Balance, Chaos, Harmony, Breath, Res
 
 ## Documentation
 
-- [docs/THEORY.md](docs/THEORY.md) — Coherence field theory deep dive
-- [docs/COMPUTE.md](docs/COMPUTE.md) — Unity Kernel 9.x specifications
-- [docs/OPERATORS.md](docs/OPERATORS.md) — Full operator definitions
-- [docs/VALIDATION.md](docs/VALIDATION.md) — Simulation methodology & results
+**Core Theory:**
+- [docs/THEORY.md](docs/THEORY.md) — The fractal premise, S* derivation, geometric constraint
+
+**Compute Application:**
+- [docs/COMPUTE.md](docs/COMPUTE.md) — Unity Kernel specs, R-σ-Λ-H signal structure
+
+**Exploratory (Early Simulations):**
+- [docs/EXPLORATORY.md](docs/EXPLORATORY.md) — Archetypes, virtues, operators from toy sims. Historical artifacts, not core theory.
+
+**Reference:**
+- [GLOSSARY.md](GLOSSARY.md) — Term definitions
+- [REFERENCES.md](REFERENCES.md) — Theoretical connections
+- [docs/VALIDATION.md](docs/VALIDATION.md) — Simulation methodology
 
 ---
 
-## Status: Seeking Scrutiny
+## Status: Under Scrutiny
 
-The math is frozen. I'm looking for collaborators who see different slices:
+This framework is published for critique. See [STATUS.md](STATUS.md) for honest accounting of what TIG is and isn't.
 
-- Physicists — Thermodynamic grounding
-- Mathematicians — Stability proofs
-- Systems engineers — Implementation
-- Complexity theorists — Scale invariance
+**What we're claiming:**
+- A coherence heuristic based on fractal structure
+- Compute health results in limited tests
+
+**What we're NOT claiming (yet):**
+- Rigorous derivation from first principles
+- Peer-reviewed validation
+- Universal physical law
+
+The math is proposed. Break it.
 
 ---
 
 ## License
 
-MIT License — Brayden Sanders / 7Site LLC
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+
+Free to use, share, adapt for non-commercial purposes.  
+Commercial use requires written permission from Brayden Sanders / 7Site LLC.

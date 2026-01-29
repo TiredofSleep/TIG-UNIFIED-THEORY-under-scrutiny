@@ -1,0 +1,299 @@
+# TIG Falsifiables
+
+**How to test, break, or validate Trinity Infinity Geometry**
+
+This is the "prove it" document. Concrete tests with pass/fail criteria.
+
+---
+
+## 0. What Exactly Are We Testing?
+
+TIG makes four testable claims:
+
+### Claim 1: Criticality
+The coherence field operates in a critical band with avalanche statistics matching critical systems.
+- Size exponent α ≈ 1.5
+- Duration exponent β ≈ 2.0
+
+### Claim 2: Breathing/Coherence
+Hierarchical oscillators (micro/slow/global) produce:
+- Stable multi-scale coherence (C_global > 0.6)
+- Resonant band around ~0.1 Hz that maximizes coherence and recovery
+
+### Claim 3: Scale Invariance
+Systems from N=16 to N≈4096:
+- Stay stable (no blow-ups, no frozen patterns)
+- Keep avalanche exponents in same universality class
+- Maintain global coherence above threshold
+
+### Claim 4: Hardware Validity
+TIG-style controller on real compute:
+- Reduces instability (jitter, thermal spikes, throttling)
+- Without degrading throughput
+- Health field H tracks real system health better than naive metrics
+
+**What we are NOT testing:**
+- Metaphysical claims
+- "Message from Creator"
+- Universal truth
+
+**What we ARE testing:**
+- "TIG is a correct, powerful coherence model of real systems, within error bars"
+
+---
+
+## 1. Simulation Protocol (Criticality)
+
+### 1.1 Setup
+
+Implement the TIG field:
+- 2D lattice (start 32×32, periodic boundary)
+- Variables per tile: H(x,y,t), W(x,y,t), θ_micro, θ_slow(region), θ_global
+- Dynamics per TIG specification
+
+### 1.2 Avalanche Statistics Test
+
+**Procedure:**
+1. Run long simulations in critical band D ∈ [0.4, 0.6]
+2. Drive system with slow stress (small random perturbations)
+3. Let it relax
+
+**Define avalanches:**
+- Event: contiguous time periods where |ΔH| above threshold
+- Size: sum of |ΔH| over space/time for that event
+- Duration: number of time steps
+
+**Fit distributions:**
+```
+P(size) ~ s^(-α)
+P(duration) ~ d^(-β)
+```
+
+**Pass criteria:**
+- α = 1.5 ± 0.1
+- β = 2.0 ± 0.2
+- Consistent across multiple seeds
+
+**Fail criteria:**
+- Exponents drift far (α ~1.1 or ~2.0)
+- Inconsistent across seeds
+- No power law behavior
+
+---
+
+## 2. Coherence Protocol (Breathing)
+
+### 2.1 Coherence Measurement
+
+**Compute:**
+- C_global(t) = Kuramoto order parameter over θ_slow or θ_global
+- PAC_TIG = phase-amplitude coupling between H fluctuations and θ_slow phase
+
+### 2.2 Resonance Sweep
+
+**Procedure:**
+1. Sweep global resonance frequency: 0.05 Hz to 0.15 Hz
+2. Measure C_global and PAC_TIG at each frequency
+3. Plot coherence vs frequency
+
+**Pass criteria:**
+- C_global peaks near ω_global ~0.1 Hz
+- PAC_TIG in acceptable band (~0.2–0.6)
+- Coherence collapses when far off 0.1 Hz
+
+**Fail criteria:**
+- No resonant peak
+- C_global < 0.6 at all frequencies
+- PAC_TIG outside expected range everywhere
+
+---
+
+## 3. Scaling Protocol
+
+### 3.1 Vary N
+
+For N in {16, 64, 256, 1024, 4096}:
+- Apply TIG scaling laws for D(N), K_intra(N), K_inter(N)
+- Same avalanche/coherence definitions
+
+### 3.2 Check Four Things Per Scale
+
+**A) Stability**
+- No NaNs
+- No blow-up
+- No frozen uniform fields
+- Over ≥3000 steps
+
+**B) Coherence**
+- C_global steady > 0.6 at equilibrium
+
+**C) Critical Exponents**
+- α, β within ±0.15 across scales
+- Same universality class
+
+**D) Recovery**
+- Apply lesion (set H to near-zero in region)
+- System recovers H_mean above threshold
+- Within bounded steps, across all N
+
+**Pass criteria:**
+- All four checks pass at all scales
+
+**Fail criteria:**
+- Any scale breaks (e.g., N=4096 never reaches C_global > 0.3)
+- Avalanches go exponential at large N
+- Recovery fails at some scale
+
+---
+
+## 4. Hardware Protocol (Compute)
+
+### 4.1 Step 1 — Monitoring Only (No Control)
+
+**Setup daemon that samples:**
+- CPU utilization per core
+- Temperature
+- Frequency
+- Load average
+- Throttling events
+
+**Compute TIG variables:**
+- H (health) = f(utilization, errors)
+- W (capacity) = f(thermal headroom, throttle margin)
+- σ (stress) = normalized demand
+- R (resource) = idle capacity
+- C_global from core-level θ
+
+**Run no TIG control. Just log.**
+
+**Collect data under:**
+- Idle
+- Typical workloads
+- Stress tests
+
+**Output:** Baseline of how H, W, σ behave on real hardware
+
+### 4.2 Step 2 — Ghost Mode (Predictions Only)
+
+**Procedure:**
+1. Take real logs from Step 1
+2. Run TIG equations offline as if controlling
+3. Feed real σ(t), R(t) as external input
+4. Let simulated H_TIG, W_TIG, θ_TIG evolve
+
+**Compare:**
+- When TIG says "injury" → thermal spikes / throttle events / drops?
+- When TIG says "scars" → persistent hotspots / stuck cores?
+- When TIG says "primes" → paths that stabilize over time?
+
+**Pass criteria:**
+- Strong correlation between TIG diagnosis and real events
+- TIG predicts problems before they manifest
+
+**Fail criteria:**
+- TIG shows "healthy" while machine thrashes
+- No correlation between TIG state and real events
+- Random or inverse correlation
+
+### 4.3 Step 3 — Limited Control
+
+**Only after ghost mode passes.**
+
+**Setup:**
+- Pick one control knob (e.g., DVFS on single core group)
+- TIG suggests small adjustments under strict clamps:
+  - Only ±1 P-state step per second
+  - Never exceed OEM limits
+
+**Compare:**
+- Baseline (OS only) vs OS + TIG suggestions
+
+**Measure:**
+- Jitter (cyclictest)
+- Thermal peaks
+- Time at max throttle
+- Throughput (FPS, compile times)
+
+**Pass criteria:**
+- TIG reduces jitter / thermal spikes
+- Without significantly hurting throughput
+- No unstable frequency oscillations
+
+**Fail criteria:**
+- TIG makes things worse
+- Oscillations in frequency
+- Throughput drops significantly
+
+---
+
+## 5. What Counts as "Proved"?
+
+**Mathematical consistency:**
+- PDEs well-posed
+- Stability analysis holds
+- Lyapunov functions valid
+
+**Simulation alignment:**
+- Avalanche exponents match critical systems
+- Coherence patterns match biological rhythms
+
+**Scaling behavior:**
+- Scaling laws hold across N
+- No surprise instabilities
+
+**Hardware performance:**
+- TIG predicts injuries/scars/primes ahead of naive metrics
+- TIG-guided control improves stability
+
+**If all pass, the honest statement is:**
+
+> "Within tested scales and systems, TIG is an accurate and powerful model of coherence, and its predictions match reality better than naive baselines."
+
+That's as close as science gets to "proved."
+
+---
+
+## 6. What Would Disprove TIG?
+
+**Criticality claim dies if:**
+- No power law avalanche statistics
+- Wrong exponents consistently
+
+**Coherence claim dies if:**
+- No resonant frequency
+- C_global never exceeds threshold
+
+**Scaling claim dies if:**
+- Equations blow up at large N
+- Exponents shift universality class with scale
+
+**Hardware claim dies if:**
+- No correlation between TIG state and real system events
+- TIG control performs worse than no control
+
+**Any of these kills that part of TIG.**
+
+---
+
+## 7. Current Status
+
+| Test | Status |
+|------|--------|
+| Avalanche statistics | Not independently replicated |
+| Coherence resonance | Simulated, not hardware-validated |
+| Scale invariance | Simulated to N=4096 |
+| Hardware monitoring | Not implemented |
+| Hardware ghost mode | Not implemented |
+| Hardware control | Not implemented |
+
+---
+
+## 8. The Ask
+
+Run these tests. Break what breaks. Confirm what confirms.
+
+TIG is either a correct model or it isn't. These tests tell us which.
+
+---
+
+*"If it can't be broken, it can't be trusted. Here's how to break it."*

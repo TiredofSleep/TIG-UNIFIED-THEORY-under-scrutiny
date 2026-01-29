@@ -1,0 +1,115 @@
+"""
+TIG: Thermodynamic Identity Gauge
+Core coherence computation
+
+Author: Brayden Sanders | 7Site LLC
+License: CC BY-NC 4.0
+"""
+
+# Constants
+SIGMA = 0.991      # Stability coefficient
+T_STAR = 0.714     # Threshold constant
+
+def compute_coherence(stress: float, virtue: float, archetype: float) -> float:
+    """
+    Compute the TIG coherence scalar S*
+    
+    Args:
+        stress: Normalized stress σ* [0, 1] - higher = more strained
+        virtue: Virtue amplitude V* [0, 1] - higher = more adaptive
+        archetype: Archetype resonance A* [0, 1] - higher = clearer identity
+    
+    Returns:
+        S*: Coherence scalar [0, 1]
+    
+    Example:
+        >>> compute_coherence(stress=0.3, virtue=0.8, archetype=0.9)
+        0.627
+    """
+    if not all(0 <= v <= 1 for v in [stress, virtue, archetype]):
+        raise ValueError("All inputs must be in range [0, 1]")
+    
+    s_star = SIGMA * (1 - stress) * virtue * archetype
+    return round(s_star, 3)
+
+
+def is_coherent(s_star: float) -> bool:
+    """Check if S* is above threshold T*"""
+    return s_star > T_STAR
+
+
+def coherence_status(s_star: float) -> str:
+    """Human-readable coherence status"""
+    if s_star > 0.8:
+        return "STRONG - System highly coherent"
+    elif s_star > T_STAR:
+        return "STABLE - Above threshold"
+    elif s_star > 0.5:
+        return "WARNING - Below threshold, cascade risk"
+    else:
+        return "CRITICAL - System likely failing"
+
+
+# === Interactive Demo ===
+if __name__ == "__main__":
+    print("=" * 50)
+    print("TIG: Thermodynamic Identity Gauge")
+    print("=" * 50)
+    print(f"Constants: σ = {SIGMA}, T* = {T_STAR}")
+    print()
+    
+    # Example scenarios
+    scenarios = [
+        {"name": "Healthy system", "stress": 0.2, "virtue": 0.85, "archetype": 0.9},
+        {"name": "Under pressure", "stress": 0.5, "virtue": 0.7, "archetype": 0.8},
+        {"name": "Near threshold", "stress": 0.6, "virtue": 0.6, "archetype": 0.7},
+        {"name": "Failing system", "stress": 0.8, "virtue": 0.4, "archetype": 0.5},
+    ]
+    
+    print("Example Scenarios:")
+    print("-" * 50)
+    
+    for s in scenarios:
+        s_star = compute_coherence(s["stress"], s["virtue"], s["archetype"])
+        status = coherence_status(s_star)
+        print(f"{s['name']}:")
+        print(f"  σ*={s['stress']}, V*={s['virtue']}, A*={s['archetype']}")
+        print(f"  S* = {s_star} → {status}")
+        print()
+    
+    # Interactive
+    print("=" * 50)
+    print("Try it yourself:")
+    print("=" * 50)
+    try:
+        stress = float(input("Enter stress σ* [0-1]: "))
+        virtue = float(input("Enter virtue V* [0-1]: "))
+        archetype = float(input("Enter archetype A* [0-1]: "))
+        
+        s_star = compute_coherence(stress, virtue, archetype)
+        print()
+        print(f"S* = {SIGMA} × (1 - {stress}) × {virtue} × {archetype}")
+        print(f"S* = {s_star}")
+        print(f"Status: {coherence_status(s_star)}")
+    except (ValueError, EOFError):
+        print("Interactive mode skipped.")
+```
+
+---
+
+**Repo structure becomes:**
+```
+TIG-UNIFIED-THEORY-under-scrutiny/
+├── docs/
+│   ├── COMPUTE.md
+│   ├── OPERATORS.md
+│   ├── THEORY.md
+│   └── VALIDATION.md
+├── src/
+│   └── tig.py          ← NEW
+├── CITATION.cff
+├── CONTRIBUTING.md
+├── GLOSSARY.md         ← NEW (if you added it)
+├── REFERENCES.md       ← NEW (if you added it)
+├── LICENSE
+└── README.md

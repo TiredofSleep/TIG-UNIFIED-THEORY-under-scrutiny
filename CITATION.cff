@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+  message: "If you use TIG in your research, please cite it as below."
+  authors:
+  - family-names: "Sanders"
+      given-names: "Brayden"
+      affiliation: "7Site LLC"
+  title: "TIG: Thermodynamic Identity Gauge"
+  version: 3.0.0
+  date-released: 2025-01-29
+  url: "https://github.com/TiredofSleep/TIG-UNIFIED-THEORY-under-scrutiny"
+  license: MIT
+keywords:
+  - coherence
+      - thermodynamics
+      - compute health
+  - distributed systems
+  - field theory
+abstract: "A unified framework for coherence measurement across computational and field-theoretic domains. TIG proposes that coherence is a measurable scalar quantity emerging from archetype-virtue interactions under thermodynamic constraints."

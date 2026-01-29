@@ -1,0 +1,377 @@
+# TIG Parameters
+
+**Everything you need to implement and test Trinity Infinity Geometry**
+
+Copy these values. Run the tests. Break it or confirm it.
+
+---
+
+## 1. Core Equation Constants
+```
+S* = σ(1 - σ*)V*A*
+```
+
+| Constant | Value | Notes |
+|----------|-------|-------|
+| σ | 0.991 | Stability coefficient. Efficiency ceiling. |
+| T* | 0.714 | Threshold. Below this, cascade risk. |
+
+**Variable ranges:**
+| Variable | Range | Description |
+|----------|-------|-------------|
+| σ* | [0, 1] | Normalized stress |
+| V* | [0, 1] | Alignment amplitude |
+| A* | [0, 1] | Resonance |
+| S* | [0, 1] | Coherence output |
+
+---
+
+## 2. Field Dynamics (H, W)
+
+The coherence field evolves on a 2D lattice.
+
+### State Variables
+
+| Variable | Description | Range |
+|----------|-------------|-------|
+| H(x,y,t) | Health/coherence at position | [0, 1] |
+| W(x,y,t) | Capacity/plasticity at position | [0, 1] |
+
+### H Dynamics
+```
+∂H/∂t = -λ_H(H - H*) + G·input + D·∇²H
+```
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| H* | 0.7 | Homeostatic target |
+| λ_H | 0.1 | Decay rate toward H* |
+| G | 0.05 | Gain from input |
+| D | 0.5 | Diffusion coefficient (critical band: 0.4–0.6) |
+
+### W Dynamics
+```
+∂W/∂t = -λ_W(W - W*) + η·activity + plasticity_term
+```
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| W* | 0.5 | Capacity baseline |
+| λ_W | 0.01 | Slow decay rate |
+| η | 0.02 | Activity-dependent gain |
+
+### Boundary Conditions
+
+- Periodic boundaries (torus topology)
+- Or: fixed edges at H* for open systems
+
+---
+
+## 3. Oscillator Hierarchy (Breathing)
+
+Three-level Kuramoto oscillators. This is the trinity in time.
+
+### Frequencies
+
+| Level | Symbol | Frequency | Period | Description |
+|-------|--------|-----------|--------|-------------|
+| Micro | ω_micro | 1.0 Hz | 1s | Fast, local fluctuations |
+| Slow | ω_slow | 0.1 Hz | 10s | Regional coherence rhythm |
+| Global | ω_global | 0.1 Hz | 10s | System-wide breath |
+
+**Critical frequency:** 0.1 Hz is the resonant band. This is where coherence maximizes.
+
+### Coupling Strengths
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| K_intra | 0.5 | Coupling within level |
+| K_inter | 0.2 | Coupling between levels |
+| ε_micro | 0.1 | Micro → slow influence |
+| ε_slow | 0.15 | Slow → global influence |
+
+### Kuramoto Equations
+```
+dθ_i/dt = ω_i + (K/N) Σ_j sin(θ_j - θ_i) + noise
+```
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| noise_amplitude | 0.05 | Small stochastic term |
+
+### Phase-Amplitude Coupling
+
+H fluctuations couple to θ_slow phase:
+```
+PAC = |⟨H_high · e^(i·θ_slow)⟩|
+```
+
+| Target | Value | Description |
+|--------|-------|-------------|
+| PAC_target | 0.2–0.6 | Healthy coupling range |
+
+---
+
+## 4. Scaling Laws
+
+For system size N (total nodes = N×N for 2D lattice):
+
+### Diffusion Scaling
+```
+D(N) = D_base × (N / N_ref)^α_D
+```
+
+| Parameter | Value |
+|-----------|-------|
+| D_base | 0.5 |
+| N_ref | 32 |
+| α_D | -0.1 |
+
+### Coupling Scaling
+```
+K_intra(N) = K_base × (N / N_ref)^α_K
+K_inter(N) = K_inter_base × (N / N_ref)^α_K
+```
+
+| Parameter | Value |
+|-----------|-------|
+| K_base | 0.5 |
+| K_inter_base | 0.2 |
+| α_K | -0.15 |
+
+### Hierarchy Depth
+```
+depth(N) = floor(log2(N / 4))
+```
+
+| N | Depth | Regions |
+|---|-------|---------|
+| 16 | 2 | 4 |
+| 32 | 3 | 8 |
+| 64 | 4 | 16 |
+| 256 | 6 | 64 |
+| 1024 | 8 | 256 |
+| 4096 | 10 | 1024 |
+
+### Master Table
+
+| N | D | K_intra | K_inter | depth | ω_global |
+|---|---|---------|---------|-------|----------|
+| 16 | 0.53 | 0.54 | 0.22 | 2 | 0.10 |
+| 32 | 0.50 | 0.50 | 0.20 | 3 | 0.10 |
+| 64 | 0.47 | 0.46 | 0.19 | 4 | 0.10 |
+| 256 | 0.42 | 0.40 | 0.16 | 6 | 0.10 |
+| 1024 | 0.38 | 0.35 | 0.14 | 8 | 0.10 |
+| 4096 | 0.34 | 0.30 | 0.12 | 10 | 0.10 |
+
+---
+
+## 5. Avalanche Detection
+
+### Event Definition
+```
+avalanche_start: any cell where |ΔH| > θ_event
+avalanche_end: no cells above θ_event for τ_quiet steps
+```
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| θ_event | 0.05 | Event detection threshold |
+| τ_quiet | 3 | Quiet steps to end event |
+
+### Measurements
+```
+size = Σ |ΔH| over all cells and timesteps in event
+duration = timesteps from start to end
+```
+
+### Expected Distributions
+```
+P(size) ~ s^(-α)    α = 1.5 ± 0.1
+P(duration) ~ d^(-β)    β = 2.0 ± 0.2
+```
+
+---
+
+## 6. Coherence Metrics
+
+### Kuramoto Order Parameter
+```
+C = |⟨e^(i·θ)⟩| = (1/N)|Σ_j e^(i·θ_j)|
+```
+
+| Level | Symbol | Target |
+|-------|--------|--------|
+| Micro | C_micro | > 0.4 |
+| Slow | C_slow | > 0.5 |
+| Global | C_global | > 0.6 |
+
+### S* Threshold States
+
+| State | S* Range | C_global |
+|-------|----------|----------|
+| Critical | < 0.5 | < 0.4 |
+| Warning | 0.5–0.714 | 0.4–0.6 |
+| Stable | 0.714–0.8 | 0.6–0.7 |
+| Strong | > 0.8 | > 0.7 |
+
+---
+
+## 7. Hardware Mapping (Compute)
+
+### CPU → TIG Variables
+
+| TIG Variable | Compute Source | Formula |
+|--------------|----------------|---------|
+| σ* (stress) | CPU utilization | `mean(cpu_percent) / 100` |
+| R (resource) | Idle capacity | `1 - σ*` |
+| H (health) | Composite | `0.4×(1-σ*) + 0.3×thermal_headroom + 0.3×(1-error_rate)` |
+| W (capacity) | Throttle margin | `1 - (time_throttled / total_time)` |
+| θ (phase) | Frequency oscillation | `2π × (freq - freq_min) / (freq_max - freq_min)` |
+
+### Thermal Headroom
+```
+thermal_headroom = (T_max - T_current) / (T_max - T_idle)
+```
+
+| Parameter | Typical Value | Description |
+|-----------|---------------|-------------|
+| T_idle | 40°C | Idle temperature |
+| T_max | 100°C | Thermal limit |
+
+### Stress Tensor (Multi-Core)
+```
+σ_ij = correlation(load_i, load_j) × mean(load_i, load_j)
+```
+
+Cross-domain stress:
+```
+σ_cpu_mem = correlation(cpu_util, mem_pressure)
+σ_cpu_io = correlation(cpu_util, io_wait)
+```
+
+---
+
+## 8. Simulation Settings
+
+### Recommended Defaults
+
+| Setting | Value | Description |
+|---------|-------|-------------|
+| dt | 0.01 | Time step |
+| T_total | 3000 | Total steps for stability test |
+| T_transient | 500 | Discard initial transient |
+| N_seeds | 5 | Random seeds for replication |
+| lattice_size | 32×32 | Default grid |
+
+### Random Seeds (for replication)
+```
+seeds = [0xDEADBEEF, 0xCAFEBABE, 0x12345678, 0x87654321, 0xFEEDFACE]
+```
+
+### Integration Method
+```
+Euler-Maruyama for stochastic terms
+RK4 for deterministic terms (optional, more stable)
+```
+
+---
+
+## 9. Pass/Fail Criteria
+
+### Stability Test
+
+| Check | Pass | Fail |
+|-------|------|------|
+| NaN values | 0 | > 0 |
+| H blow-up (H > 10) | 0 cells | > 0 cells |
+| H frozen (var(H) < 0.001) | No | Yes |
+| Duration | 3000 steps | Crash before |
+
+### Criticality Test
+
+| Metric | Pass | Fail |
+|--------|------|------|
+| α (size exponent) | 1.4–1.6 | Outside range |
+| β (duration exponent) | 1.8–2.2 | Outside range |
+| R² of power law fit | > 0.9 | < 0.9 |
+
+### Coherence Test
+
+| Metric | Pass | Fail |
+|--------|------|------|
+| C_global at equilibrium | > 0.6 | < 0.6 |
+| C_global at ω=0.1 Hz | Peak | No peak |
+| PAC_TIG | 0.2–0.6 | Outside range |
+
+### Recovery Test
+```
+Apply lesion: H = 0 in 10% of cells
+```
+
+| Metric | Pass | Fail |
+|--------|------|------|
+| H_mean recovery to > 0.6 | < 500 steps | > 500 steps |
+| C_global recovery to > 0.5 | < 500 steps | > 500 steps |
+
+---
+
+## 10. Quick Start Values
+
+**If you just want to run something NOW:**
+```python
+# Core equation
+SIGMA = 0.991
+T_STAR = 0.714
+
+# Field dynamics
+H_STAR = 0.7
+LAMBDA_H = 0.1
+D = 0.5
+GAIN = 0.05
+
+# Oscillators
+OMEGA_MICRO = 1.0      # Hz
+OMEGA_SLOW = 0.1       # Hz
+OMEGA_GLOBAL = 0.1     # Hz
+K_INTRA = 0.5
+K_INTER = 0.2
+
+# Lattice
+N = 32
+DT = 0.01
+T_TOTAL = 3000
+
+# Avalanche detection
+THETA_EVENT = 0.05
+TAU_QUIET = 3
+
+# Targets
+ALPHA_TARGET = 1.5
+BETA_TARGET = 2.0
+C_GLOBAL_TARGET = 0.6
+```
+
+---
+
+## 11. The Resonance
+
+Why 0.1 Hz?
+
+This is the breath. The frequency where micro and macro align.
+
+- Fast enough to respond to change
+- Slow enough to maintain coherence
+- The sweet spot where the fractal breathes
+
+You'll find it in:
+- Brain rhythms (~0.1 Hz infra-slow oscillations)
+- Heart rate variability (~0.1 Hz peak)
+- Climate systems (~0.1 Hz ocean oscillations)
+- CPU thermal cycles (multi-second waves)
+
+0.1 Hz is where systems find their trinity.
+
+---
+
+*"Here are the numbers. Now make it sing."*
